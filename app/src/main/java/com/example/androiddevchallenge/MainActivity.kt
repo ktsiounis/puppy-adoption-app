@@ -16,14 +16,22 @@
 package com.example.androiddevchallenge
 
 import android.os.Bundle
+import android.text.Layout
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.foundation.*
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.example.androiddevchallenge.ui.theme.MyTheme
+import dev.chrisbanes.accompanist.coil.CoilImage
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,8 +47,47 @@ class MainActivity : AppCompatActivity() {
 // Start building your app here!
 @Composable
 fun MyApp() {
-    Surface(color = MaterialTheme.colors.background) {
-        Text(text = "Ready... Set... GO!")
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(text = "Puppy Adoption")
+                }
+            )
+        }
+    ) {
+        PuppiesList(puppies = arrayListOf(Puppy("Jack"), Puppy("Nelly")))
+    }
+}
+
+@Composable
+fun PuppiesList(puppies: List<Puppy>) {
+    val scrollState = rememberLazyListState()
+
+    LazyColumn(state = scrollState) {
+        items(puppies) {
+            PuppyCard(puppy = it, onClick = { /*TODO*/ })
+        }
+    }
+}
+
+@Composable
+fun PuppyCard(puppy: Puppy,
+              onClick: () -> Unit) {
+    Row(verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .clickable(onClick = onClick)
+            .padding(16.dp)
+            .fillMaxWidth()) {
+        CoilImage(
+            data = "https://developer.android.com/images/brand/Android_Robot.png",
+            contentDescription = "Android Logo",
+            modifier = Modifier.size(50.dp)
+        )
+        Spacer(Modifier.width(10.dp))
+        Column {
+            Text(puppy.name)
+        }
     }
 }
 
